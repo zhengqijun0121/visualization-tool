@@ -26,6 +26,7 @@
 
 import Hash from "./Hash.js";
 import { addRadioButtonGroupToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const ARRAY_ELEM_WIDTH = 90;
 const ARRAY_ELEM_HEIGHT = 30;
@@ -342,7 +343,7 @@ class ClosedHash extends Hash {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new ClosedHash(animManag, canvas.width, canvas.height);
 }

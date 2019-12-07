@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar, addLabelToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 class DPLCS extends Algorithm {
 	constructor(am, w, h) {
@@ -880,7 +881,7 @@ DPLCS.MESSAGE_ID = 0;
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new DPLCS(animManag, canvas.width, canvas.height);
 }

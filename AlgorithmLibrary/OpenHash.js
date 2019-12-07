@@ -340,7 +340,7 @@ class LinkedListNode {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new OpenHash(animManag, canvas.width, canvas.height);
 }

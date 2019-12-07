@@ -679,6 +679,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new ComparisonSort(animManag, canvas.width, canvas.height);
 }

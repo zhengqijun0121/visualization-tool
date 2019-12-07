@@ -45,6 +45,7 @@ const PUSH_ELEMENT_Y = 30;
 const SIZE = 30;
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 class StackArray extends Algorithm {
 	constructor(am, w, h) {
@@ -272,7 +273,7 @@ class StackArray extends Algorithm {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new StackArray(animManag, canvas.width, canvas.height);
 }

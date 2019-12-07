@@ -26,6 +26,7 @@
 
 import Graph, { VERTEX_INDEX_COLOR } from "./Graph.js";
 import { addControlToAlgorithmBar, addLabelToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const AUX_ARRAY_WIDTH = 25;
 const AUX_ARRAY_HEIGHT = 25;
@@ -327,7 +328,7 @@ class DFS extends Graph {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new DFS(animManag, canvas.width, canvas.height);
 }

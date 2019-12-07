@@ -26,6 +26,7 @@
 
 import Graph, { LARGE_SIZE, SMALL_SIZE } from "./Graph.js";
 import { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 class Floyd extends Graph {
 	constructor(am, w, h) {
@@ -466,7 +467,7 @@ Floyd.LARGE_MESSAGE_Y = 450;
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new Floyd(animManag, canvas.width, canvas.height);
 }

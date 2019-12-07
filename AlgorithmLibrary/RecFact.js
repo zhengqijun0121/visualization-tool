@@ -212,7 +212,7 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new RecFact(animManag, canvas.width, canvas.height);
 }
 

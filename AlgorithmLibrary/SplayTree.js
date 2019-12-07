@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 // Constants.
 
@@ -935,7 +936,7 @@ class BSTNode {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new SPLAYTREE(animManag, canvas.width, canvas.height);
 }

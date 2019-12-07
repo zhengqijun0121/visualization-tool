@@ -30,6 +30,7 @@ import Algorithm, {
 	addGroupToAlgorithmBar,
 	addLabelToAlgorithmBar,
 } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const ARRAY_START_X = 100;
 const ARRAY_START_Y = 200;
@@ -417,7 +418,7 @@ class QuickSelect extends Algorithm {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new QuickSelect(animManag, canvas.width, canvas.height);
 }

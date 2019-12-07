@@ -28,6 +28,7 @@ import Algorithm, {
 	addControlToAlgorithmBar,
 	addRadioButtonGroupToAlgorithmBar,
 } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const MAX_HASH_LENGTH = 10;
 
@@ -548,7 +549,7 @@ export default class Hash extends Algorithm {
 var currentAlg;
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new Hash(animManag, canvas.width, canvas.height);
 }
 */

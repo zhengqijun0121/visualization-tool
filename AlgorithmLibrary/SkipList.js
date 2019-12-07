@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar, addLabelToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const SKIP_LIST_START_X = 100;
 const SKIP_LIST_START_Y = 400;
@@ -680,7 +681,7 @@ class SkipList extends Algorithm {
 
 function init() {
     // eslint-disable-next-line no-undef
-    const animManag = initCanvas();
+    const animManag = new AnimationManager();;
     // eslint-disable-next-line no-undef, no-unused-vars
     const currentAlg = new SkipList(animManag, canvas.width, canvas.height);
 }

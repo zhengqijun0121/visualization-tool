@@ -26,6 +26,7 @@
 
 import Graph, { VERTEX_INDEX_COLOR } from "./Graph.js";
 import { addControlToAlgorithmBar, addLabelToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const TABLE_ENTRY_WIDTH = 50;
 const TABLE_ENTRY_HEIGHT = 25;
@@ -482,7 +483,7 @@ let currentAlg;
 // eslint-disable-next-line no-unused-vars
 function init(runDijkstra) {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef
 	currentAlg = new DijkstraPrim(animManag, runDijkstra, canvas.width, canvas.height);
 }

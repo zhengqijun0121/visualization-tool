@@ -1497,6 +1497,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new RedBlack(animManag, canvas.width, canvas.height);
 }

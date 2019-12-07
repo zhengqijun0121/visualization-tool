@@ -479,6 +479,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new ConnectedComponent(animManag, canvas.width, canvas.height);
 }

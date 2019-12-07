@@ -358,6 +358,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new ClosedHashBucket(animManag, canvas.width, canvas.height);
 }

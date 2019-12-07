@@ -26,6 +26,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar, addLabelToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const ARRAY_START_X = 100;
 const ARRAY_START_Y = 200;
@@ -69,7 +70,7 @@ class ArrayList extends Algorithm {
 		this.addValueField = addControlToAlgorithmBar("Text", "");
 		this.addValueField.onkeydown = this.returnSubmit(
 			this.addValueField,
-			this.addIndexCallback.bind(this),
+			() => this.addIndexCallback(),
 			4,
 			true
 		);
@@ -81,7 +82,7 @@ class ArrayList extends Algorithm {
 		this.addIndexField = addControlToAlgorithmBar("Text", "");
 		this.addIndexField.onkeydown = this.returnSubmit(
 			this.addIndexField,
-			this.addIndexCallback.bind(this),
+			() => this.addIndexCallback(),
 			4,
 			true
 		);
@@ -101,14 +102,14 @@ class ArrayList extends Algorithm {
 
 		// Add to back button
 		this.addBackButton = addControlToAlgorithmBar("Button", "Add to Back");
-		this.addBackButton.onclick = this.addBackCallback.bind(this);
+		this.addBackButton.onclick = () => this.addBackCallback();
 		this.controls.push(this.addBackButton);
 
 		// Remove's index text field
 		this.removeField = addControlToAlgorithmBar("Text", "");
 		this.removeField.onkeydown = this.returnSubmit(
 			this.removeField,
-			this.removeIndexCallback.bind(this),
+			() => this.removeIndexCallback(),
 			4,
 			true
 		);
@@ -116,34 +117,34 @@ class ArrayList extends Algorithm {
 
 		// Remove from index button
 		this.removeIndexButton = addControlToAlgorithmBar("Button", "Remove from Index");
-		this.removeIndexButton.onclick = this.removeIndexCallback.bind(this);
+		this.removeIndexButton.onclick = () => this.removeIndexCallback();
 		this.controls.push(this.removeIndexButton);
 
 		addLabelToAlgorithmBar("or");
 
 		// Remove from front button
 		this.removeFrontButton = addControlToAlgorithmBar("Button", "Remove from Front");
-		this.removeFrontButton.onclick = this.removeFrontCallback.bind(this);
+		this.removeFrontButton.onclick = () => this.removeFrontCallback();
 		this.controls.push(this.removeFrontButton);
 
 		// Remove from back button
 		this.removeBackButton = addControlToAlgorithmBar("Button", "Remove from Back");
-		this.removeBackButton.onclick = this.removeBackCallback.bind(this);
+		this.removeBackButton.onclick = () => this.removeBackCallback();
 		this.controls.push(this.removeBackButton);
 
 		// Get's index text field
 		// this.getField = addControlToAlgorithmBar("Text", "");
-		// this.getField.onkeydown = this.returnSubmit(this.getField, this.getCallback.bind(this), 4, true);
+		// this.getField.onkeydown = this.returnSubmit(this.getField, () => this.getCallback(), 4, true);
 		// this.controls.push(this.getField);
 
 		// Get button
 		// this.getButton = addControlToAlgorithmBar("Button", "Get");
-		// this.getButton.onclick = this.getCallback.bind(this);
+		// this.getButton.onclick = () => this.getCallback();
 		// this.controls.push(this.getButton);
 
 		// Clear button
 		this.clearButton = addControlToAlgorithmBar("Button", "Clear");
-		this.clearButton.onclick = this.clearCallback.bind(this);
+		this.clearButton.onclick = () => this.clearCallback();
 		this.controls.push(this.clearButton);
 	}
 	setup() {
@@ -205,7 +206,7 @@ class ArrayList extends Algorithm {
 			if (index >= 0 && index <= this.size) {
 				this.addValueField.value = "";
 				this.addIndexField.value = "";
-				this.implementAction(this.add.bind(this), addVal + "," + index);
+				this.implementAction(_ => this.add(_), addVal + "," + index);
 			}
 		}
 	}
@@ -213,14 +214,14 @@ class ArrayList extends Algorithm {
 		if (this.addValueField.value != "" && this.size < SIZE) {
 			const addVal = this.addValueField.value;
 			this.addValueField.value = "";
-			this.implementAction(this.add.bind(this), addVal + "," + 0);
+			this.implementAction(_ => this.add(_), addVal + "," + 0);
 		}
 	}
 	addBackCallback() {
 		if (this.addValueField.value != "" && this.size < SIZE) {
 			const addVal = this.addValueField.value;
 			this.addValueField.value = "";
-			this.implementAction(this.add.bind(this), addVal + "," + this.size);
+			this.implementAction(_ => this.add(_), addVal + "," + this.size);
 		}
 	}
 
@@ -229,25 +230,25 @@ class ArrayList extends Algorithm {
 			const index = this.removeField.value;
 			if (index >= 0 && index < this.size) {
 				this.removeField.value = "";
-				this.implementAction(this.remove.bind(this), index);
+				this.implementAction(_ => this.remove(_), index);
 			}
 		}
 	}
 
 	removeFrontCallback() {
 		if (this.size > 0) {
-			this.implementAction(this.remove.bind(this), 0);
+			this.implementAction(_ => this.remove(_), 0);
 		}
 	}
 
 	removeBackCallback() {
 		if (this.size > 0) {
-			this.implementAction(this.remove.bind(this), this.size - 1);
+			this.implementAction(_ => this.remove(_), this.size - 1);
 		}
 	}
 
 	clearCallback() {
-		this.implementAction(this.clear.bind(this), "");
+		this.implementAction(() => this.clear(), "");
 	}
 
 	clear() {
@@ -395,7 +396,7 @@ class ArrayList extends Algorithm {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new ArrayList(animManag, canvas.width, canvas.height);
 }

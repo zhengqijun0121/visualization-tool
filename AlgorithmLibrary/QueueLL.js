@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const LINKED_LIST_START_X = 100;
 const LINKED_LIST_START_Y = 200;
@@ -302,7 +303,7 @@ class QueueLL extends Algorithm {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new QueueLL(animManag, canvas.width, canvas.height);
 }

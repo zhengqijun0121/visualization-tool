@@ -24,409 +24,349 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-
 // Base "class": UndoBlock
 
-function UndoBlock()
-{
+import SingleAnimation from "./SingleAnimation.js";
 
-}
+export class UndoBlock {
+	// eslint-disable-next-line no-unused-vars
+	addUndoAnimation(animationList) {
+		return false;
+	}
 
-UndoBlock.prototype.addUndoAnimation = function(animationList)
-{
-	return false;
-}
-
-UndoBlock.prototype.undoInitialStep = function(world)
-{
-
+	// eslint-disable-next-line no-unused-vars
+	undoInitialStep(world) {}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoMove
 ////////////////////////////////////////////////////////////
 
-function UndoMove(id, fmX, fmy, tx, ty)
-{
-	this.objectID = id;
-	this.fromX = fmX;
-	this.fromY = fmy;
-	this.toX = tx;
-	this.toY = ty;
-}
+export class UndoMove extends UndoBlock {
+	constructor(id, fmX, fmy, tx, ty) {
+		super();
+		this.objectID = id;
+		this.fromX = fmX;
+		this.fromY = fmy;
+		this.toX = tx;
+		this.toY = ty;
+	}
 
-
-UndoMove.prototype = new UndoBlock();
-UndoMove.prototype.constructor = UndoMove;
-
-UndoMove.prototype.addUndoAnimation = function (animationList)
-{
-	var nextAnim = new SingleAnimation(this.objectID, this.fromX, this.fromY, this.toX, this.toY);
-	animationList.push(nextAnim);
-	return true;
+	addUndoAnimation(animationList) {
+		const nextAnim = new SingleAnimation(
+			this.objectID,
+			this.fromX,
+			this.fromY,
+			this.toX,
+			this.toY
+		);
+		animationList.push(nextAnim);
+		return true;
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoCreate
 ////////////////////////////////////////////////////////////
 
-function UndoCreate(id)
-{
-	this.objectID = id;
-}
+export class UndoCreate extends UndoBlock {
+	constructor(id) {
+		super();
+		this.objectID = id;
+	}
 
-UndoCreate.prototype = new UndoBlock();
-UndoCreate.prototype.constructor = UndoCreate;
-
-
-UndoCreate.prototype.undoInitialStep = function(world)
-{
-			world.removeObject(this.objectID);
+	undoInitialStep(world) {
+		world.removeObject(this.objectID);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoHighlight
 ////////////////////////////////////////////////////////////
 
-function UndoHighlight(id, val)
-{
-	this.objectID = id;
-	this.highlightValue = val;
+export class UndoHighlight extends UndoBlock {
+	constructor(id, val) {
+		super();
+		this.objectID = id;
+		this.highlightValue = val;
+	}
+
+	undoInitialStep(world) {
+		world.setHighlight(this.objectID, this.highlightValue);
+	}
 }
-
-UndoHighlight.prototype = new UndoBlock();
-UndoHighlight.prototype.constructor = UndoHighlight;
-
-UndoHighlight.prototype.undoInitialStep = function(world)
-{
-	world.setHighlight(this.objectID, this.highlightValue);
-}
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetHeight
 ////////////////////////////////////////////////////////////
 
-function UndoSetHeight(id, val)
-{
-	this.objectID = id;
-	this.height = val;
-}
+export class UndoSetHeight extends UndoBlock {
+	constructor(id, val) {
+		super();
+		this.objectID = id;
+		this.height = val;
+	}
 
-UndoSetHeight.prototype = new UndoBlock();
-UndoSetHeight.prototype.constructor = UndoSetHeight;
-
-UndoSetHeight.prototype.undoInitialStep = function(world)
-{
-	world.setHeight(this.objectID, this.height);
+	undoInitialStep(world) {
+		world.setHeight(this.objectID, this.height);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetWidth
 ////////////////////////////////////////////////////////////
 
-function UndoSetWidth(id, val)
-{
-	this.objectID = id;
-	this.width = val;
+export class UndoSetWidth extends UndoBlock {
+	constructor(id, val) {
+		super();
+		this.objectID = id;
+		this.width = val;
+	}
+
+	undoInitialStep(world) {
+		world.setWidth(this.objectID, this.width);
+	}
 }
-
-UndoSetWidth.prototype = new UndoBlock();
-UndoSetWidth.prototype.constructor = UndoSetWidth;
-
-UndoSetWidth.prototype.undoInitialStep = function(world)
-{
-	world.setWidth(this.objectID, this.width);
-}
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetNumElements
 ////////////////////////////////////////////////////////////
-function UndoSetNumElements(obj, newNumElems)
-{
-	this.objectID = obj.objectID;
-	this.sizeBeforeChange = obj.getNumElements();
-	this.sizeAfterChange = newNumElems;
-	if (this.sizeBeforeChange > this.sizeAfterChange)
-	{
-		this.labels = new Array(this.sizeBeforeChange - this.sizeAfterChange);
-		this.colors = new Array(this.sizeBeforeChange - this.sizeAfterChange);
-		for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-		{
-			this.labels[i] = obj.getText(i+this.sizeAfterChange);
-			this.colors[i] = obj.getTextColor(i+this.sizeAfterChange);
+export class UndoSetNumElements extends UndoBlock {
+	constructor(obj, newNumElems) {
+		super();
+		this.objectID = obj.objectID;
+		this.sizeBeforeChange = obj.getNumElements();
+		this.sizeAfterChange = newNumElems;
+		if (this.sizeBeforeChange > this.sizeAfterChange) {
+			this.labels = new Array(this.sizeBeforeChange - this.sizeAfterChange);
+			this.colors = new Array(this.sizeBeforeChange - this.sizeAfterChange);
+			for (let i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
+				this.labels[i] = obj.getText(i + this.sizeAfterChange);
+				this.colors[i] = obj.getTextColor(i + this.sizeAfterChange);
+			}
 		}
-
 	}
-}
 
-UndoSetNumElements.prototype = new UndoBlock();
-UndoSetNumElements.prototype.constructor = UndoSetNumElements;
-
-
-UndoSetNumElements.prototype.undoInitialStep = function(world)
-{
-	world.setNumElements(this.objectID, this.sizeBeforeChange);
-	if (this.sizeBeforeChange > this.sizeAfterChange)
-	{
-		for (var i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++)
-		{
-			world.setText(this.objectID, this.labels[i], i+this.sizeAfterChange);
-			world.setTextColor(this.objectID, this.colors[i], i+this.sizeAfterChange);
+	undoInitialStep(world) {
+		world.setNumElements(this.objectID, this.sizeBeforeChange);
+		if (this.sizeBeforeChange > this.sizeAfterChange) {
+			for (let i = 0; i < this.sizeBeforeChange - this.sizeAfterChange; i++) {
+				world.setText(this.objectID, this.labels[i], i + this.sizeAfterChange);
+				world.setTextColor(this.objectID, this.colors[i], i + this.sizeAfterChange);
+			}
 		}
 	}
 }
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetAlpha
 ////////////////////////////////////////////////////////////
 
-function UndoSetAlpha(id, alph)
-{
-	this.objectID = id;
-	this.alphaVal = alph;
-}
+export class UndoSetAlpha extends UndoBlock {
+	constructor(id, alph) {
+		super();
+		this.objectID = id;
+		this.alphaVal = alph;
+	}
 
-UndoSetAlpha.prototype = new UndoBlock();
-UndoSetAlpha.prototype.constructor = UndoSetAlpha;
-
-UndoSetAlpha.prototype.undoInitialStep = function(world)
-{
-	world.setAlpha(this.objectID, this.alphaVal);
+	undoInitialStep(world) {
+		world.setAlpha(this.objectID, this.alphaVal);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetNull
 ////////////////////////////////////////////////////////////
 
-function UndoSetNull(id, nv)
-{
-	this.objectID = id;
-	this.nullVal = nv;
-}
+export class UndoSetNull extends UndoBlock {
+	constructor(id, nv) {
+		super();
+		this.objectID = id;
+		this.nullVal = nv;
+	}
 
-UndoSetNull.prototype = new UndoBlock();
-UndoSetNull.prototype.constructor = UndoSetNull;
-
-UndoSetNull.prototype.undoInitialStep = function(world)
-{
-	world.setNull(this.objectID, this.nullVal);
+	undoInitialStep(world) {
+		world.setNull(this.objectID, this.nullVal);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetPrevNull
 ////////////////////////////////////////////////////////////
 
-function UndoSetPrevNull(id, nv)
-{
-	this.objectID = id;
-	this.nullVal = nv;
-}
+export class UndoSetPrevNull extends UndoBlock {
+	constructor(id, nv) {
+		super();
+		this.objectID = id;
+		this.nullVal = nv;
+	}
 
-UndoSetPrevNull.prototype = new UndoBlock();
-UndoSetPrevNull.prototype.constructor = UndoSetPrevNull;
-
-UndoSetPrevNull.prototype.undoInitialStep = function(world)
-{
-	world.SetPrevNull(this.objectID, this.nullVal);
+	undoInitialStep(world) {
+		world.SetPrevNull(this.objectID, this.nullVal);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetNextNull
 ////////////////////////////////////////////////////////////
 
-function UndoSetNextNull(id, nv)
-{
-	this.objectID = id;
-	this.nullVal = nv;
-}
+export class UndoSetNextNull extends UndoBlock {
+	constructor(id, nv) {
+		super();
+		this.objectID = id;
+		this.nullVal = nv;
+	}
 
-UndoSetNextNull.prototype = new UndoBlock();
-UndoSetNextNull.prototype.constructor = UndoSetNextNull;
-
-UndoSetNextNull.prototype.undoInitialStep = function(world)
-{
-	world.SetNextNull(this.objectID, this.nullVal);
+	undoInitialStep(world) {
+		world.SetNextNull(this.objectID, this.nullVal);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetForegroundColor
 ////////////////////////////////////////////////////////////
 
-function UndoSetForegroundColor(id, color)
-{
-	this.objectID = id;
-	this.color = color;
-}
+export class UndoSetForegroundColor extends UndoBlock {
+	constructor(id, color) {
+		super();
+		this.objectID = id;
+		this.color = color;
+	}
 
-UndoSetForegroundColor.prototype = new UndoBlock();
-UndoSetForegroundColor.prototype.constructor = UndoSetForegroundColor;
-
-UndoSetForegroundColor.prototype.undoInitialStep =  function (world)
-{
-	world.setForegroundColor(this.objectID, this.color);
+	undoInitialStep(world) {
+		world.setForegroundColor(this.objectID, this.color);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetBackgroundColor
 ////////////////////////////////////////////////////////////
 
-function UndoSetBackgroundColor(id, color)
-{
-	this.objectID = id;
-	this.color = color;
+export class UndoSetBackgroundColor extends UndoBlock {
+	constructor(id, color) {
+		super();
+		this.objectID = id;
+		this.color = color;
+	}
+
+	undoInitialStep(world) {
+		world.setBackgroundColor(this.objectID, this.color);
+	}
 }
-
-UndoSetBackgroundColor.prototype = new UndoBlock();
-UndoSetBackgroundColor.prototype.constructor = UndoSetBackgroundColor;
-
-UndoSetBackgroundColor.prototype.undoInitialStep =  function (world)
-{
-	world.setBackgroundColor(this.objectID, this.color);
-}
-
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetHighlightIndex
 ////////////////////////////////////////////////////////////
 
-function UndoSetHighlightIndex(id, index)
-{
-	this.objectID = id;
-	this.index = index;
+export class UndoSetHighlightIndex extends UndoBlock {
+	constructor(id, index) {
+		super();
+		this.objectID = id;
+		this.index = index;
+	}
+
+	undoInitialStep(world) {
+		world.setHighlightIndex(this.objectID, this.index);
+	}
 }
-
-UndoSetHighlightIndex.prototype = new UndoBlock();
-UndoSetHighlightIndex.prototype.constructor = UndoSetHighlightIndex;
-
-UndoSetHighlightIndex.prototype.undoInitialStep =  function (world)
-{
-	world.setHighlightIndex(this.objectID, this.index);
-}
-
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetText
 ////////////////////////////////////////////////////////////
 
+export class UndoSetText extends UndoBlock {
+	constructor(id, str, index) {
+		super();
+		this.objectID = id;
+		this.newText = str;
+		this.labelIndex = index;
+	}
 
-
-function UndoSetText(id, str, index)
-{
-	this.objectID = id;
-	this.newText = str;
-	this.labelIndex = index;
-}
-
-UndoSetText.prototype = new UndoBlock();
-UndoSetText.prototype.constructor = UndoSetText;
-
-UndoSetText.prototype.undoInitialStep = function(world)
-{
-	world.setText(this.objectID, this.newText, this.labelIndex);
+	undoInitialStep(world) {
+		world.setText(this.objectID, this.newText, this.labelIndex);
+	}
 }
 ////////////////////////////////////////////////////////////
 // UndoSetTextColor
 ////////////////////////////////////////////////////////////
 
+export class UndoSetTextColor extends UndoBlock {
+	constructor(id, color, index) {
+		super();
+		this.objectID = id;
+		this.color = color;
+		this.index = index;
+	}
 
-
-function UndoSetTextColor(id, color, index)
-{
-	this.objectID = id;
-	this.color = color;
-	this.index = index;
+	undoInitialStep(world) {
+		world.setTextColor(this.objectID, this.color, this.index);
+	}
 }
-
-UndoSetTextColor.prototype = new UndoBlock();
-UndoSetTextColor.prototype.constructor = UndoSetTextColor;
-
-UndoSetTextColor.prototype.undoInitialStep = function(world)
-{
-	world.setTextColor(this.objectID, this.color, this.index);
-}
-
-
 
 ////////////////////////////////////////////////////////////
 // UndoHighlightEdge
 ////////////////////////////////////////////////////////////
 
-function UndoHighlightEdge(from, to, val)
-{
-	this.fromID = from;
-	this.toID = to;
-	this.highlightValue = val;
+export class UndoHighlightEdge extends UndoBlock {
+	constructor(from, to, val) {
+		super();
+		this.fromID = from;
+		this.toID = to;
+		this.highlightValue = val;
+	}
+
+	undoInitialStep(world) {
+		world.setEdgeHighlight(this.fromID, this.toID, this.highlightValue);
+	}
 }
-
-UndoHighlightEdge.prototype = new UndoBlock();
-UndoHighlightEdge.prototype.constructor = UndoHighlightEdge;
-
-UndoHighlightEdge.prototype.undoInitialStep = function(world)
-{
-	world.setEdgeHighlight(this.fromID, this.toID, this.highlightValue);
-}
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetEdgeColor
 ////////////////////////////////////////////////////////////
 
-function UndoSetEdgeColor(from, to, oldColor)
-{
-	this.fromID = from;
-	this.toID = to;
-	this.color = oldColor;
+export class UndoSetEdgeColor extends UndoBlock {
+	constructor(from, to, oldColor) {
+		super();
+		this.fromID = from;
+		this.toID = to;
+		this.color = oldColor;
+	}
+
+	undoInitialStep(world) {
+		world.setEdgeColor(this.fromID, this.toID, this.color);
+	}
 }
-
-UndoSetEdgeColor.prototype = new UndoBlock();
-UndoSetEdgeColor.prototype.constructor = UndoSetEdgeColor;
-
-UndoSetEdgeColor.prototype.undoInitialStep = function(world)
-{
-	world.setEdgeColor(this.fromID, this.toID, this.color);
-}
-
 
 ////////////////////////////////////////////////////////////
 // UndoSetEdgeAlpha
 ////////////////////////////////////////////////////////////
 
-function UndoSetEdgeAlpha(from, to, oldAplha)
-{
-	this.fromID = from;
-	this.toID = to;
-	this.alpha  = oldAplha;
-}
+export class UndoSetEdgeAlpha extends UndoBlock {
+	constructor(from, to, oldAplha) {
+		super();
+		this.fromID = from;
+		this.toID = to;
+		this.alpha = oldAplha;
+	}
 
-UndoSetEdgeAlpha.prototype = new UndoBlock();
-UndoSetEdgeAlpha.prototype.constructor = UndoSetEdgeAlpha;
-
-UndoSetEdgeAlpha.prototype.undoInitialStep = function(world)
-{
-	world.setEdgeAlpha(this.fromID, this.toID, this.alpha);
+	undoInitialStep(world) {
+		world.setEdgeAlpha(this.fromID, this.toID, this.alpha);
+	}
 }
 
 ////////////////////////////////////////////////////////////
 // UndoSetPosition
 ////////////////////////////////////////////////////////////
 
-function UndoSetPosition(id, x, y)
-{
-	this.objectID = id;
-	this.x = x;
-	this.y = y;
-}
+export class UndoSetPosition extends UndoBlock {
+	constructor(id, x, y) {
+		super();
+		this.objectID = id;
+		this.x = x;
+		this.y = y;
+	}
 
-UndoSetPosition.prototype = new UndoBlock();
-UndoSetPosition.prototype.constructor = UndoSetPosition;
-
-
-UndoSetPosition.prototype.undoInitialStep = function(world)
-{
-	world.setNodePosition(this.objectID, this.x, this.y);
+	undoInitialStep(world) {
+		world.setNodePosition(this.objectID, this.x, this.y);
+	}
 }

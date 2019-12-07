@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const FIRST_PRINT_POS_X = 50;
 const PRINT_VERTICAL_GAP = 20;
@@ -1483,7 +1484,7 @@ function BTreeNode(id, initialX, initialY) {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new BTree(animManag, canvas.width, canvas.height);
 }

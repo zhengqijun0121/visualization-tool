@@ -25,6 +25,7 @@
 // or implied, of the University of San Francisco
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 class AVL extends Algorithm {
 	constructor(am, w, h) {
@@ -1226,7 +1227,7 @@ AVL.EXPLANITORY_TEXT_Y = 10;
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new AVL(animManag, canvas.width, canvas.height);
 }

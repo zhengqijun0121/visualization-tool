@@ -27,6 +27,7 @@
 // Constants.
 
 import Algorithm, { addControlToAlgorithmBar } from "./Algorithm.js";
+import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const LINK_COLOR = "#007700";
 const HIGHLIGHT_CIRCLE_COLOR = "#007700";
@@ -685,7 +686,7 @@ function BSTNode(val, id, initialX, initialY) {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = initCanvas();
+	const animManag = new AnimationManager();;
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new BST(animManag, canvas.width, canvas.height);
 }

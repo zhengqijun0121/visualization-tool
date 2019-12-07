@@ -103,6 +103,6 @@ var currentAlg;
 
 function init()
 {
-	var animManag = initCanvas();
+	var animManag = new AnimationManager();;
 	currentAlg = new TestAlgorithm(animManag);
 }

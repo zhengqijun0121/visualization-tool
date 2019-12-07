@@ -729,6 +729,6 @@ var currentAlg;
 
 function init()
 {
-    var animManag = initCanvas();
+    var animManag = new AnimationManager();;
     currentAlg = new Search(animManag, canvas.width, canvas.height);
 }
