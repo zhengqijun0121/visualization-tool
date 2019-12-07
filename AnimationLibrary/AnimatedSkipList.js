@@ -24,206 +24,195 @@
 // authors and should not be interpreted as representing official policies, either expressed
 // or implied, of the University of San Francisco
 
-function AnimatedSkipList(objectID, label, w, h, labelColor, fillColor, edgeColor)
-{
-    this.init(objectID, label, w, h, labelColor, fillColor, edgeColor);
+import AnimatedObject from "./AnimatedObject.js";
+import { UndoBlock } from "./UndoFunctions.js";
+
+export default class AnimatedSkipList extends AnimatedObject {
+	constructor(objectID, label, w, h, labelColor, fillColor, edgeColor) {
+		super();
+
+		this.w = w;
+		this.h = h;
+		this.fillColor = fillColor;
+		this.edgeColor = edgeColor;
+
+		this.label = label;
+		this.labelPosX = 0;
+		this.labelPosY = 0;
+		this.labelColor = labelColor;
+
+		this.highlighted = false;
+		this.objectID = objectID;
+	}
+
+	left() {
+		return this.x - this.w / 2;
+	}
+
+	right() {
+		return this.x + this.w / 2;
+	}
+
+	top() {
+		return this.y - this.h / 2;
+	}
+
+	bottom() {
+		return this.y + this.h / 2;
+	}
+
+	resetTextPosition() {
+		this.labelPosY = this.y;
+		this.labelPosX = this.x;
+	}
+
+	getTailPointerAttachPos(fromX, fromY, anchor) {
+		switch (anchor) {
+			case 0: // Top
+				return [this.x, this.top()];
+			case 1: // Bottom
+				return [this.x, this.bottom()];
+			case 2: // Left
+				return [this.left(), this.y];
+			case 3: // Right
+				return [this.right(), this.y];
+		}
+	}
+
+	getHeadPointerAttachPos(fromX, fromY) {
+		return this.getClosestCardinalPoint(fromX, fromY); // Normal anchor
+	}
+
+	setWidth(wdth) {
+		this.w = wdth;
+		this.resetTextPosition();
+	}
+
+	setHeight(hght) {
+		this.h = hght;
+		this.resetTextPosition();
+	}
+
+	getWidth() {
+		return this.w;
+	}
+
+	getHeight() {
+		return this.h;
+	}
+
+	draw(context) {
+		const startX = this.left();
+		const startY = this.top();
+
+		if (this.highlighted) {
+			context.strokeStyle = "#ff0000";
+			context.fillStyle = "#ff0000";
+
+			context.beginPath();
+			context.moveTo(startX - this.highlightDiff, startY - this.highlightDiff);
+			context.lineTo(startX + this.w + this.highlightDiff, startY - this.highlightDiff);
+			context.lineTo(
+				startX + this.w + this.highlightDiff,
+				startY + this.h + this.highlightDiff
+			);
+			context.lineTo(startX - this.highlightDiff, startY + this.h + this.highlightDiff);
+			context.lineTo(startX - this.highlightDiff, startY - this.highlightDiff);
+			context.closePath();
+			context.stroke();
+			context.fill();
+		}
+		context.strokeStyle = this.edgeColor;
+		context.fillStyle = this.fillColor;
+
+		context.beginPath();
+		context.moveTo(startX, startY);
+		context.lineTo(startX + this.w, startY);
+		context.lineTo(startX + this.w, startY + this.h);
+		context.lineTo(startX, startY + this.h);
+		context.lineTo(startX, startY);
+		context.closePath();
+		context.stroke();
+		context.fill();
+
+		context.textAlign = "center";
+		context.font = "10px sans-serif";
+		context.textBaseline = "middle";
+		context.lineWidth = 1;
+
+		this.resetTextPosition();
+		context.fillStyle = this.labelColor;
+		if (this.label == "\u2212\u221E" /* -inf */ || this.label == "\u221E" /* inf */) {
+			context.font = "18px Arial";
+		}
+		context.fillText(this.label, this.labelPosX, this.labelPosY);
+	}
+
+	setTextColor(color) {
+		this.labelColor = color;
+	}
+
+	getTextColor() {
+		return this.labelColor;
+	}
+
+	getText() {
+		return this.label;
+	}
+
+	setText(newText) {
+		this.label = newText;
+		this.resetTextPosition();
+	}
+
+	createUndoDelete() {
+		return new UndoDeleteSkipList(
+			this.objectID,
+			this.label,
+			this.w,
+			this.h,
+			this.x,
+			this.y,
+			this.labelColor,
+			this.fillColor,
+			this.edgeColor,
+			this.layer
+		);
+	}
+
+	setHighlight(value) {
+		if (value != this.highlighted) {
+			this.highlighted = value;
+		}
+	}
 }
 
-AnimatedSkipList.prototype = new AnimatedObject();
-AnimatedSkipList.prototype.constructor = AnimatedSkipList;
-AnimatedSkipList.superclass = AnimatedObject.prototype;
+class UndoDeleteSkipList extends UndoBlock {
+	constructor(objectID, label, w, h, x, y, labelColor, fillColor, edgeColor, layer) {
+		super();
+		this.objectID = objectID;
+		this.label = label;
+		this.w = w;
+		this.h = h;
+		this.x = x;
+		this.y = y;
+		this.labelColor = labelColor;
+		this.fillColor = fillColor;
+		this.edgeColor = edgeColor;
+		this.layer = layer;
+	}
 
-AnimatedSkipList.prototype.init = function(objectID, label, w, h, labelColor, fillColor, edgeColor)
-{
-
-    AnimatedSkipList.superclass.init.call(this);
-
-    this.w = w;
-    this.h = h;
-    this.fillColor = fillColor;
-    this.edgeColor = edgeColor;
-
-    this.label = label;
-    this.labelPosX = 0;
-    this.labelPosY = 0;
-    this.labelColor = labelColor;
-
-    this.highlighted = false;
-    this.objectID = objectID;
-}
-
-AnimatedSkipList.prototype.left = function()
-{
-    return this.x - this.w / 2;
-}
-
-AnimatedSkipList.prototype.right = function()
-{
-    return this.x + this.w / 2;
-}
-
-AnimatedSkipList.prototype.top = function()
-{
-    return this.y - this.h / 2;
-}
-
-AnimatedSkipList.prototype.bottom = function()
-{
-    return this.y + this.h / 2;
-}
-
-AnimatedSkipList.prototype.resetTextPosition = function()
-{
-    this.labelPosY = this.y;
-    this.labelPosX = this.x;
-}
-
-AnimatedSkipList.prototype.getTailPointerAttachPos = function(fromX, fromY, anchor)
-{
-    switch(anchor) {
-        case 0: // Top
-            return [this.x, this.top()];
-        case 1: // Bottom
-            return [this.x, this.bottom()];
-        case 2: // Left
-            return [this.left(), this.y];
-        case 3: // Right
-            return [this.right(), this.y];
-    }
-}
-
-AnimatedSkipList.prototype.getHeadPointerAttachPos = function(fromX, fromY)
-{
-    return this.getClosestCardinalPoint(fromX, fromY); // Normal anchor
-}
-
-AnimatedSkipList.prototype.setWidth = function(wdth)
-{
-    this.w = wdth;
-    this.resetTextPosition();
-}
-
-AnimatedSkipList.prototype.setHeight = function(hght)
-{
-    this.h = hght;
-    this.resetTextPosition();
-}
-
-AnimatedSkipList.prototype.getWidth = function()
-{
-    return this.w;
-}
-
-AnimatedSkipList.prototype.getHeight = function()
-{
-    return this.h;
-}
-
-AnimatedSkipList.prototype.draw = function(context)
-{
-    var startX;
-    var startY;
-
-    startX = this.left();
-    startY = this.top();
-
-    if (this.highlighted)
-    {
-        context.strokeStyle = "#ff0000";
-        context.fillStyle = "#ff0000";
-
-        context.beginPath();
-        context.moveTo(startX - this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.w + this.highlightDiff,startY- this.highlightDiff);
-        context.lineTo(startX+this.w+ this.highlightDiff,startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY+this.h + this.highlightDiff);
-        context.lineTo(startX - this.highlightDiff,startY - this.highlightDiff);
-        context.closePath();
-        context.stroke();
-        context.fill();
-    }
-    context.strokeStyle = this.edgeColor;
-    context.fillStyle = this.fillColor;
-
-    context.beginPath();
-    context.moveTo(startX ,startY);
-    context.lineTo(startX + this.w, startY);
-    context.lineTo(startX + this.w, startY + this.h);
-    context.lineTo(startX, startY + this.h);
-    context.lineTo(startX, startY);
-    context.closePath();
-    context.stroke();
-    context.fill();
-
-    context.textAlign = 'center';
-    context.font = '10px sans-serif';
-    context.textBaseline = 'middle';
-    context.lineWidth = 1;
-
-    this.resetTextPosition();
-    context.fillStyle = this.labelColor;
-    if(this.label == "\u2212\u221E" /* -inf */ || this.label == "\u221E" /* inf */)
-    {
-        context.font='18px Arial';
-    }
-    context.fillText(this.label, this.labelPosX, this.labelPosY);
-}
-
-AnimatedSkipList.prototype.setTextColor = function(color)
-{
-    this.labelColor = color;
-}
-
-AnimatedSkipList.prototype.getTextColor = function()
-{
-    return this.labelColor;
-}
-
-AnimatedSkipList.prototype.getText = function()
-{
-    return this.label;
-}
-
-AnimatedSkipList.prototype.setText = function(newText)
-{
-    this.label = newText;
-    this.resetTextPosition();
-}
-
-AnimatedSkipList.prototype.createUndoDelete = function()
-{
-    return new UndoDeleteSkipList(this.objectID, this.label, this.w, this.h, this.x, this.y, 
-        this.labelColor, this.fillColor, this.edgeColor, this.layer);
-}
-
-AnimatedSkipList.prototype.setHighlight = function(value)
-{
-    if (value != this.highlighted)
-    {
-        this.highlighted = value;
-    }
-}
-
-function UndoDeleteSkipList(objectID, label, w, h, x, y, labelColor, fillColor, edgeColor, layer)
-{
-    this.objectID = objectID;
-    this.label = label;
-    this.w = w;
-    this.h = h;
-    this.x = x;
-    this.y = y;
-    this.labelColor = labelColor;
-    this.fillColor = fillColor;
-    this.edgeColor = edgeColor;
-    this.layer = layer;
-}
-
-UndoDeleteSkipList.prototype = new UndoBlock();
-UndoDeleteSkipList.prototype.constructor = UndoDeleteSkipList;
-
-UndoDeleteSkipList.prototype.undoInitialStep = function(world)
-{
-    world.addSkipListObject(this.objectID, this.label, this.w, this.h, this.labelColor, this.fillColor, this.edgeColor);
-    world.setNodePosition(this.objectID, this.x, this.y);
-    world.setLayer(this.objectID, this.layer);
+	undoInitialStep(world) {
+		world.addSkipListObject(
+			this.objectID,
+			this.label,
+			this.w,
+			this.h,
+			this.labelColor,
+			this.fillColor,
+			this.edgeColor
+		);
+		world.setNodePosition(this.objectID, this.x, this.y);
+		world.setLayer(this.objectID, this.layer);
+	}
 }

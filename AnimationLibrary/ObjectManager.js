@@ -41,10 +41,14 @@
 //       2.  Refactor this code so that it uses the same object syntax (with
 //           prototypes) as te rest of the code.  (low priority)
 
+import AnimatedBTreeNode from "./AnimatedBTreeNode.js";
 import AnimatedCircle from "./AnimatedCircle.js";
+import AnimatedCircularlyLinkedList from "./AnimatedCircularlyLinkedList.js";
+import AnimatedDoublyLinkedList from "./AnimatedDoublyLinkedList.js";
 import AnimatedLabel from "./AnimatedLabel.js";
 import AnimatedLinkedList from "./AnimatedLinkedList.js";
 import AnimatedRectangle from "./AnimatedRectangle.js";
+import AnimatedSkipList from "./AnimatedSkipList.js";
 import HighlightCircle from "./HighlightCircle.js";
 import Line from "./Line.js";
 
@@ -223,7 +227,7 @@ export default class ObjectManager {
 			}
 			if (this.Edges[objectID] != null && this.Edges[objectID] != undefined) {
 				for (let i = 0; i < this.Edges[objectID].length; i++) {
-					var nextEdge = this.Edges[objectID][i];
+					const nextEdge = this.Edges[objectID][i];
 					if (nextEdge != null && nextEdge != undefined) {
 						nextEdge.addedToScene =
 							nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
@@ -232,7 +236,7 @@ export default class ObjectManager {
 			}
 			if (this.BackEdges[objectID] != null && this.BackEdges[objectID] != undefined) {
 				for (let i = 0; i < this.BackEdges[objectID].length; i++) {
-					var nextEdge = this.BackEdges[objectID][i];
+					const nextEdge = this.BackEdges[objectID][i];
 					if (nextEdge != null && nextEdge != undefined) {
 						nextEdge.addedToScene =
 							nextEdge.Node1.addedToScene && nextEdge.Node2.addedToScene;
@@ -335,14 +339,16 @@ export default class ObjectManager {
 	disconnect(objectIDfrom, objectIDto) {
 		let undo = null;
 		let i;
+		let len;
+		let deleted;
 		if (this.Edges[objectIDfrom] != null) {
-			var len = this.Edges[objectIDfrom].length;
-			for (i = len - 1; i >= 0; i--) {
+			len = this.Edges[objectIDfrom].length;
+			for (let i = len - 1; i >= 0; i--) {
 				if (
 					this.Edges[objectIDfrom][i] != null &&
 					this.Edges[objectIDfrom][i].Node2 == this.Nodes[objectIDto]
 				) {
-					var deleted = this.Edges[objectIDfrom][i];
+					deleted = this.Edges[objectIDfrom][i];
 					undo = deleted.createUndoDisconnect();
 					this.Edges[objectIDfrom][i] = this.Edges[objectIDfrom][len - 1];
 					len -= 1;
@@ -370,15 +376,16 @@ export default class ObjectManager {
 
 	deleteIncident(objectID) {
 		const undoStack = [];
-
+		let len;
+		let deleted;
 		if (this.Edges[objectID] != null) {
-			var len = this.Edges[objectID].length;
+			len = this.Edges[objectID].length;
 			for (let i = len - 1; i >= 0; i--) {
-				var deleted = this.Edges[objectID][i];
+				deleted = this.Edges[objectID][i];
 				const node2ID = deleted.Node2.identifier();
 				undoStack.push(deleted.createUndoDisconnect());
 
-				var len2 = this.BackEdges[node2ID].length;
+				let len2 = this.BackEdges[node2ID].length;
 				for (let j = len2 - 1; j >= 0; j--) {
 					if (this.BackEdges[node2ID][j] == deleted) {
 						this.BackEdges[node2ID][j] = this.BackEdges[node2ID][len2 - 1];
@@ -391,13 +398,13 @@ export default class ObjectManager {
 		}
 		if (this.BackEdges[objectID] != null) {
 			len = this.BackEdges[objectID].length;
-			for (i = len - 1; i >= 0; i--) {
+			for (let i = len - 1; i >= 0; i--) {
 				deleted = this.BackEdges[objectID][i];
 				const node1ID = deleted.Node1.identifier();
 				undoStack.push(deleted.createUndoDisconnect());
 
-				len2 = this.Edges[node1ID].length;
-				for (j = len2 - 1; j >= 0; j--) {
+				let len2 = this.Edges[node1ID].length;
+				for (let j = len2 - 1; j >= 0; j--) {
 					if (this.Edges[node1ID][j] == deleted) {
 						this.Edges[node1ID][j] = this.Edges[node1ID][len2 - 1];
 						len2 -= 1;
@@ -417,6 +424,7 @@ export default class ObjectManager {
 		} else {
 			this.Nodes[ObjectID] = null;
 		}
+		return OldObject;
 	}
 
 	getObject(objectID) {
@@ -444,9 +452,9 @@ export default class ObjectManager {
 	getTextWidth(text) {
 		// TODO:  Need to make fonts more flexible, and less hardwired.
 		this.ctx.font = "10px sans-serif";
-		if (text == undefined) {
-			w = 3;
-		}
+		// if (text == undefined) {
+		// 	w = 3;
+		// }
 		const strList = text.split("\n");
 		let width = 0;
 		if (strList.length == 1) {
@@ -462,8 +470,7 @@ export default class ObjectManager {
 
 	setText(nodeID, text, index) {
 		if (this.Nodes[nodeID] == null || this.Nodes[nodeID] == undefined) {
-			return;
-			throw "setting text of an object that does not exit";
+			throw "setting text of an object that does not exist";
 		}
 		this.Nodes[nodeID].setText(text, index, this.getTextWidth(text));
 	}
@@ -684,7 +691,6 @@ export default class ObjectManager {
 	) {
 		if (this.Nodes[objectID] != null) {
 			throw new Error("addLinkedListObject:Object with same ID already Exists!");
-			return;
 		}
 		const newNode = new AnimatedLinkedList(
 			objectID,
@@ -713,7 +719,6 @@ export default class ObjectManager {
 	) {
 		if (this.Nodes[objectID] != null) {
 			throw new Error("addDoublyLinkedListObject:Object with same ID already Exists!");
-			return;
 		}
 		const newNode = new AnimatedDoublyLinkedList(
 			objectID,
@@ -740,7 +745,6 @@ export default class ObjectManager {
 	) {
 		if (this.Nodes[objectID] != null) {
 			throw new Error("addCircularlyLinkedListObject:Object with same ID already Exists!");
-			return;
 		}
 		const newNode = new AnimatedCircularlyLinkedList(
 			objectID,
@@ -766,7 +770,6 @@ export default class ObjectManager {
 	) {
 		if (this.Nodes[objectID] != null) {
 			throw new Error("addSkipListObject:Object with same ID already Exists!");
-			return;
 		}
 		const newNode = new AnimatedSkipList(
 			objectID,
@@ -792,7 +795,7 @@ export default class ObjectManager {
 		backgroundColor = backgroundColor == undefined ? "#FFFFFF" : backgroundColor;
 		foregroundColor = foregroundColor == undefined ? "#FFFFFF" : foregroundColor;
 
-		if (this.Nodes[objectID] != null && Nodes[objectID] != undefined) {
+		if (this.Nodes[objectID] != null && this.Nodes[objectID] != undefined) {
 			throw "addBTreeNode:Object with same ID already Exists!";
 		}
 

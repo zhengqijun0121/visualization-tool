@@ -464,7 +464,7 @@ function init() {
 	// eslint-disable-next-line no-undef
 	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef, no-unused-vars
-	currentAlg = new DoublyLinkedList(animManag, canvas.width, canvas.height);
+	const currentAlg = new DoublyLinkedList(animManag, canvas.width, canvas.height);
 }
 
 window.onload = init;
