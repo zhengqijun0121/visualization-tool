@@ -680,10 +680,10 @@ class SkipList extends Algorithm {
 }
 
 function init() {
-    // eslint-disable-next-line no-undef
-    const animManag = new AnimationManager();;
-    // eslint-disable-next-line no-undef, no-unused-vars
-    const currentAlg = new SkipList(animManag, canvas.width, canvas.height);
+	// eslint-disable-next-line no-undef
+	const animManag = new AnimationManager();
+	// eslint-disable-next-line no-undef, no-unused-vars
+	const currentAlg = new SkipList(animManag, canvas.width, canvas.height);
 }
 
 window.onload = init;

@@ -28,7 +28,6 @@ import Algorithm, {
 	addControlToAlgorithmBar,
 	addRadioButtonGroupToAlgorithmBar,
 } from "./Algorithm.js";
-import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 
 const MAX_HASH_LENGTH = 10;
 

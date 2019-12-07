@@ -274,7 +274,7 @@ class StackLL extends Algorithm {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = new AnimationManager();;
+	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new StackLL(animManag, canvas.width, canvas.height);
 }

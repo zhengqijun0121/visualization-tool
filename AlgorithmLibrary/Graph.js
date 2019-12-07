@@ -30,7 +30,6 @@ import Algorithm, {
 	addControlToAlgorithmBar,
 	addRadioButtonGroupToAlgorithmBar,
 } from "./Algorithm.js";
-import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
 import {
 	LARGE_ALLOWED,
 	LARGE_CURVE,

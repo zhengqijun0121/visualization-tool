@@ -25,8 +25,8 @@
 // or implied, of the University of San Francisco
 
 import Graph, { EDGE_COLOR, VERTEX_INDEX_COLOR } from "./Graph.js";
-import { addControlToAlgorithmBar } from "./Algorithm.js";
 import AnimationManager from "./../AnimationLibrary/AnimationMain.js";
+import { addControlToAlgorithmBar } from "./Algorithm.js";
 
 class Kruskal extends Graph {
 	constructor(am, w, h) {
@@ -504,7 +504,7 @@ Kruskal.HIGHLIGHT_CIRCLE_COLOR_2 = "#FF0000";
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = new AnimationManager();;
+	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new Kruskal(animManag, canvas.width, canvas.height);
 }

@@ -328,7 +328,7 @@ class DFS extends Graph {
 
 function init() {
 	// eslint-disable-next-line no-undef
-	const animManag = new AnimationManager();;
+	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef, no-unused-vars
 	const currentAlg = new DFS(animManag, canvas.width, canvas.height);
 }

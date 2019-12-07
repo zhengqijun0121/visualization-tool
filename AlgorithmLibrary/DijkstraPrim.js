@@ -483,7 +483,7 @@ let currentAlg;
 // eslint-disable-next-line no-unused-vars
 function init(runDijkstra) {
 	// eslint-disable-next-line no-undef
-	const animManag = new AnimationManager();;
+	const animManag = new AnimationManager();
 	// eslint-disable-next-line no-undef
 	currentAlg = new DijkstraPrim(animManag, runDijkstra, canvas.width, canvas.height);
 }
