@@ -14,7 +14,7 @@ class Header extends React.Component {
 						className={this.state.menuVisible ? 'selected' : ''}
 						onClick={this.toggleMenu}
 					></button>
-					<h1>CS1332 Data Structures and Algorithms Visualizations</h1>
+					<h1>Data Structures and Algorithms Visualizations</h1>
 				</div>
 				<div className={`menu ${menuClass[this.state.menuVisible]}`}>
 					<ul>
@@ -29,7 +29,7 @@ class Header extends React.Component {
 							</Link>
 						</li>
 						<li>
-							<a href="https://github.com/RodrigoDLPontes/visualization-tool">
+							<a href="https://github.com/zhengqijun0121/visualization-tool">
 								Source Code
 							</a>
 						</li>

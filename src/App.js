@@ -6,7 +6,7 @@ import React from 'react';
 import ReactGA from 'react-ga';
 
 const App = () => {
-	ReactGA.initialize('UA-164374852-1');
+	ReactGA.initialize('G-3380V2B3NW');
 	ReactGA.pageview('home');
 
 	return (
